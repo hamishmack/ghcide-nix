@@ -1,5 +1,6 @@
 { sources ? import ./sources.nix
 , system ? builtins.currentSystem
+, executableDynamic ? true
 }:
 let
   haskellnix = import sources."haskell.nix";
@@ -16,7 +17,7 @@ let
               packages.ghc.flags.ghci = pkgs.lib.mkForce true;
               packages.ghci.flags.ghci = pkgs.lib.mkForce true;
               # This fixes a performance issue, probably https://gitlab.haskell.org/ghc/ghc/issues/15524
-              packages.ghcide.configureFlags = [ "--enable-executable-dynamic" ];
+              packages.ghcide.configureFlags = pkgs.lib.optional executableDynamic "--enable-executable-dynamic";
               packages.haskell-lsp.components.library.doHaddock = pkgs.lib.mkForce false;
               packages.ghcide.components.library.doHaddock = pkgs.lib.mkForce false;
             })];
